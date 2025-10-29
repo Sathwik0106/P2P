@@ -19,46 +19,46 @@ const JobListings: React.FC<JobListingsProps> = ({ jobs }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">Recent Job Opportunities</h2>
-        <a href="#" className="text-sm text-indigo-600 hover:text-indigo-800">View all</a>
+    <div className="bg-white rounded-lg shadow-md p-3 sm:p-4">
+      <div className="flex justify-between items-center mb-3 sm:mb-4">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-800">Recent Job Opportunities</h2>
+        <a href="#" className="text-xs sm:text-sm text-indigo-600 hover:text-indigo-800">View all</a>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {jobs.map((job) => (
-          <div key={job.id} className="border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
-            <div className="flex items-start space-x-3">
-              <img src={job.company.avatar} alt={job.company.name} className="h-10 w-10 rounded-md" />
+          <div key={job.id} className="border-b border-gray-100 pb-3 sm:pb-4 last:border-b-0 last:pb-0">
+            <div className="flex items-start space-x-2 sm:space-x-3">
+              <img src={job.company.avatar} alt={job.company.name} className="h-8 w-8 sm:h-10 sm:w-10 rounded-md" />
               <div>
-                <h3 className="font-semibold text-gray-800">{job.title}</h3>
-                <p className="text-sm text-gray-600">{job.company.name}</p>
-                <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-500">
+                <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{job.title}</h3>
+                <p className="text-xs sm:text-sm text-gray-600">{job.company.name}</p>
+                <div className="mt-2 flex flex-wrap gap-1 sm:gap-2 text-xs text-gray-500">
                   <span className="flex items-center">
-                    <MapPin size={14} className="mr-1" />
+                    <MapPin size={12} className="mr-1" />
                     {job.location}
                   </span>
                   <span className="flex items-center">
-                    <Briefcase size={14} className="mr-1" />
+                    <Briefcase size={12} className="mr-1" />
                     {job.type}
                   </span>
                   <span className="flex items-center">
-                    <Clock size={14} className="mr-1" />
+                    <Clock size={12} className="mr-1" />
                     Posted {formatDate(job.postedAt)}
                   </span>
                   {job.applicants && (
                     <span className="flex items-center">
-                      <Users size={14} className="mr-1" />
+                      <Users size={12} className="mr-1" />
                       {job.applicants} applicants
                     </span>
                   )}
                 </div>
               </div>
             </div>
-            <div className="mt-3 flex justify-end">
+            <div className="mt-2 sm:mt-3 flex justify-end">
               <button
                 onClick={() => setAppliedIds(applyToJob(job.id))}
-                className={`text-sm ${appliedIds.includes(job.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-3 py-1 rounded-md transition-colors`}
+                className={`text-xs sm:text-sm ${appliedIds.includes(job.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-2 sm:px-3 py-1 rounded-md transition-colors`}
               >
                 {appliedIds.includes(job.id) ? 'Applied' : 'Apply Now'}
               </button>

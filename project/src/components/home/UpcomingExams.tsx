@@ -10,41 +10,41 @@ interface UpcomingExamsProps {
 const UpcomingExams: React.FC<UpcomingExamsProps> = ({ exams }) => {
   const [registered, setRegistered] = useState<string[]>(getRegisteredExamIds());
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">Upcoming Exams</h2>
-        <a href="#" className="text-sm text-indigo-600 hover:text-indigo-800">View all</a>
+    <div className="bg-white rounded-lg shadow-md p-3 sm:p-4">
+      <div className="flex justify-between items-center mb-3 sm:mb-4">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-800">Upcoming Exams</h2>
+        <a href="#" className="text-xs sm:text-sm text-indigo-600 hover:text-indigo-800">View all</a>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {exams.map((exam) => (
-          <div key={exam.id} className="border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
+          <div key={exam.id} className="border-b border-gray-100 pb-3 sm:pb-4 last:border-b-0 last:pb-0">
             <div className="flex items-start">
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-800">{exam.title}</h3>
-                <p className="text-sm text-gray-600 mt-1">{exam.description}</p>
-                <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-500">
+                <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{exam.title}</h3>
+                <p className="text-xs sm:text-sm text-gray-600 mt-1">{exam.description}</p>
+                <div className="mt-2 flex flex-wrap gap-1 sm:gap-2 text-xs text-gray-500">
                   <span className="flex items-center">
-                    <Clock size={14} className="mr-1" />
+                    <Clock size={12} className="mr-1" />
                     {exam.duration} minutes
                   </span>
                   <span className="flex items-center">
-                    <Award size={14} className="mr-1" />
+                    <Award size={12} className="mr-1" />
                     {exam.certification}
                   </span>
                 </div>
                 {exam.sponsor && (
                   <div className="mt-2 flex items-center">
-                    <span className="text-xs text-gray-500 mr-2">Sponsored by:</span>
-                    <img src={exam.sponsor.avatar} alt={exam.sponsor.name} className="h-4 w-auto" />
+                    <span className="text-xs text-gray-500 mr-1 sm:mr-2">Sponsored by:</span>
+                    <img src={exam.sponsor.avatar} alt={exam.sponsor.name} className="h-3 w-auto sm:h-4" />
                   </div>
                 )}
               </div>
             </div>
-            <div className="mt-3 flex justify-end">
+            <div className="mt-2 sm:mt-3 flex justify-end">
               <button
                 onClick={() => setRegistered(toggleRegisterExam(exam.id))}
-                className={`text-sm ${registered.includes(exam.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-3 py-1 rounded-md transition-colors`}
+                className={`text-xs sm:text-sm ${registered.includes(exam.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-2 sm:px-3 py-1 rounded-md transition-colors`}
               >
                 {registered.includes(exam.id) ? 'Registered' : 'Register'}
               </button>

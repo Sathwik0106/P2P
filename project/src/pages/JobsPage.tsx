@@ -37,35 +37,35 @@ const JobsPage: React.FC = () => {
   }, [allJobs, query, type]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="flex flex-col lg:flex-row gap-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
         {/* Left Sidebar */}
-        <div className="lg:w-1/4">
+        <div className="lg:w-1/4 order-2 lg:order-1">
           <Sidebar />
         </div>
         
         {/* Main Content */}
-        <div className="lg:w-3/4">
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold text-gray-800">Job Opportunities</h1>
+        <div className="lg:w-3/4 order-1 lg:order-2">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-2 sm:gap-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Job Opportunities</h1>
               <div className="flex gap-2">
-                <button className="btn-outline">Saved Jobs</button>
-                <button className="btn-outline">Applied Jobs</button>
+                <button className="btn-outline text-sm sm:text-base">Saved Jobs</button>
+                <button className="btn-outline text-sm sm:text-base">Applied Jobs</button>
               </div>
             </div>
             
-            <div className="mb-6">
-              <div className="flex flex-col md:flex-row gap-4 mb-4">
+            <div className="mb-4 sm:mb-6">
+              <div className="flex flex-col md:flex-row gap-3 sm:gap-4 mb-3 sm:mb-4">
                 <input 
                   type="text" 
                   placeholder="Search jobs..." 
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="flex-1 px-3 sm:px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
                 <select
-                  className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base"
                   value={type}
                   onChange={(e) => setType(e.target.value)}
                 >

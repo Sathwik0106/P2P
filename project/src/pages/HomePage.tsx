@@ -19,24 +19,24 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="flex flex-col lg:flex-row gap-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
         {/* Left Sidebar */}
-        <div className="lg:w-1/4">
+        <div className="lg:w-1/4 order-2 lg:order-1">
           <Sidebar />
         </div>
         
         {/* Main Content */}
-        <div className="lg:w-2/4 space-y-6">
+        <div className="lg:w-2/4 order-1 lg:order-2 space-y-4 sm:space-y-6">
           <CreatePost onPostCreated={() => setFeedPosts(getPosts())} />
           <Feed posts={feedPosts} onChange={setFeedPosts} />
         </div>
         
         {/* Right Sidebar */}
-        <div className="lg:w-1/4 space-y-6">
+        <div className="lg:w-1/4 order-3 space-y-4 sm:space-y-6">
           <JobListings jobs={jobs.slice(0, 2)} />
           <SkillSwapBoard requests={skillSwapRequests} />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-6">
             <TrendingSkills skills={trendingSkills} />
             <TopMentors mentors={topMentors} />
             <UpcomingExams exams={upcomingExams} />
