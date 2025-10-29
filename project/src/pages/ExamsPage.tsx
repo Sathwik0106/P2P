@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/layout/Sidebar';
-import { upcomingExams } from '../data/mockData';
+import { getExams, getRegisteredExamIds, toggleRegisterExam } from '../services/exams';
+import type { Exam } from '../types';
 import { Clock, Award, Calendar, CheckCircle } from 'lucide-react';
 
 const ExamsPage: React.FC = () => {
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [registered, setRegistered] = useState<string[]>([]);
+
+  useEffect(() => {
+    setExams(getExams());
+    setRegistered(getRegisteredExamIds());
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -46,7 +55,7 @@ const ExamsPage: React.FC = () => {
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Upcoming Exams</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {upcomingExams.concat(upcomingExams).map((exam, index) => (
+                {exams.map((exam, index) => (
                   <div key={`${exam.id}-${index}`} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                     <div className="flex items-start">
                       <div className="flex-1">
@@ -75,8 +84,11 @@ const ExamsPage: React.FC = () => {
                       </div>
                     </div>
                     <div className="mt-3 flex justify-end">
-                      <button className="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-md transition-colors">
-                        Register
+                      <button
+                        onClick={() => setRegistered(toggleRegisterExam(exam.id))}
+                        className={`text-sm ${registered.includes(exam.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-3 py-1 rounded-md transition-colors`}
+                      >
+                        {registered.includes(exam.id) ? 'Registered' : 'Register'}
                       </button>
                     </div>
                   </div>

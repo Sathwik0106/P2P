@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { Image, FileText, Video, Send } from 'lucide-react';
 import { currentUser } from '../../data/mockData';
+import { addPost } from '../../services/posts';
+import type { Post } from '../../types';
 
-const CreatePost: React.FC = () => {
+interface Props {
+  onPostCreated?: (post: Post) => void;
+}
+
+const CreatePost: React.FC<Props> = ({ onPostCreated }) => {
   const [postContent, setPostContent] = useState('');
   const [postType, setPostType] = useState<'general' | 'skill-swap' | 'question'>('general');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Post content:', postContent);
-    console.log('Post type:', postType);
-    // Implement post creation logic
+    if (!postContent.trim()) return;
+    const created = addPost(currentUser, postContent.trim(), postType);
+    onPostCreated?.(created);
     setPostContent('');
     setPostType('general');
   };

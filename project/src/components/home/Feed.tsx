@@ -1,12 +1,14 @@
 import React from 'react';
 import { ThumbsUp, MessageSquare, Share2, MoreHorizontal } from 'lucide-react';
 import { Post as PostType } from '../../types';
+import { likePost, commentPost, sharePost } from '../../services/posts';
 
 interface FeedProps {
   posts: PostType[];
+  onChange?: (posts: PostType[]) => void;
 }
 
-const Feed: React.FC<FeedProps> = ({ posts }) => {
+const Feed: React.FC<FeedProps> = ({ posts, onChange }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -72,15 +74,33 @@ const Feed: React.FC<FeedProps> = ({ posts }) => {
           </div>
           
           <div className="mt-4 pt-3 border-t border-gray-100 flex justify-between">
-            <button className="flex items-center text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-1 rounded-md transition-colors">
+            <button
+              onClick={() => {
+                likePost(post.id);
+                onChange?.(posts.map((p) => (p.id === post.id ? { ...p, likes: p.likes + 1 } : p)));
+              }}
+              className="flex items-center text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-1 rounded-md transition-colors"
+            >
               <ThumbsUp size={18} className="mr-2" />
               <span>Like</span>
             </button>
-            <button className="flex items-center text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-1 rounded-md transition-colors">
+            <button
+              onClick={() => {
+                commentPost(post.id);
+                onChange?.(posts.map((p) => (p.id === post.id ? { ...p, comments: p.comments + 1 } : p)));
+              }}
+              className="flex items-center text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-1 rounded-md transition-colors"
+            >
               <MessageSquare size={18} className="mr-2" />
               <span>Comment</span>
             </button>
-            <button className="flex items-center text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-1 rounded-md transition-colors">
+            <button
+              onClick={() => {
+                sharePost(post.id);
+                onChange?.(posts.map((p) => (p.id === post.id ? { ...p, shares: p.shares + 1 } : p)));
+              }}
+              className="flex items-center text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-1 rounded-md transition-colors"
+            >
               <Share2 size={18} className="mr-2" />
               <span>Share</span>
             </button>

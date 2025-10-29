@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/layout/Sidebar';
 import CreatePost from '../components/home/CreatePost';
 import Feed from '../components/home/Feed';
@@ -7,9 +7,17 @@ import SkillSwapBoard from '../components/home/SkillSwapBoard';
 import TrendingSkills from '../components/home/TrendingSkills';
 import TopMentors from '../components/home/TopMentors';
 import UpcomingExams from '../components/home/UpcomingExams';
-import { posts, jobs, skillSwapRequests, trendingSkills, topMentors, upcomingExams } from '../data/mockData';
+import { jobs, skillSwapRequests, trendingSkills, topMentors, upcomingExams } from '../data/mockData';
+import { getPosts } from '../services/posts';
+import type { Post } from '../types';
 
 const HomePage: React.FC = () => {
+  const [feedPosts, setFeedPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    setFeedPosts(getPosts());
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -20,8 +28,8 @@ const HomePage: React.FC = () => {
         
         {/* Main Content */}
         <div className="lg:w-2/4 space-y-6">
-          <CreatePost />
-          <Feed posts={posts} />
+          <CreatePost onPostCreated={() => setFeedPosts(getPosts())} />
+          <Feed posts={feedPosts} onChange={setFeedPosts} />
         </div>
         
         {/* Right Sidebar */}

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Briefcase, MapPin, Clock, Users } from 'lucide-react';
 import { Job } from '../../types';
+import { applyToJob, getAppliedJobIds } from '../../services/jobs';
 
 interface JobListingsProps {
   jobs: Job[];
 }
 
 const JobListings: React.FC<JobListingsProps> = ({ jobs }) => {
+  const [appliedIds, setAppliedIds] = useState<string[]>(getAppliedJobIds());
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -54,8 +56,11 @@ const JobListings: React.FC<JobListingsProps> = ({ jobs }) => {
               </div>
             </div>
             <div className="mt-3 flex justify-end">
-              <button className="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-md transition-colors">
-                Apply Now
+              <button
+                onClick={() => setAppliedIds(applyToJob(job.id))}
+                className={`text-sm ${appliedIds.includes(job.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-3 py-1 rounded-md transition-colors`}
+              >
+                {appliedIds.includes(job.id) ? 'Applied' : 'Apply Now'}
               </button>
             </div>
           </div>

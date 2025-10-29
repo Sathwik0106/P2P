@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Star, Users } from 'lucide-react';
 import { Mentor } from '../../types';
+import { getFollowingIds, toggleFollow } from '../../services/network';
 
 interface TopMentorsProps {
   mentors: Mentor[];
 }
 
 const TopMentors: React.FC<TopMentorsProps> = ({ mentors }) => {
+  const [following, setFollowing] = useState<string[]>(getFollowingIds());
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
       <div className="flex justify-between items-center mb-4">
@@ -39,8 +41,11 @@ const TopMentors: React.FC<TopMentorsProps> = ({ mentors }) => {
                 ))}
               </div>
             </div>
-            <button className="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-md transition-colors">
-              Connect
+            <button
+              onClick={() => setFollowing(toggleFollow(mentor.user.id))}
+              className={`text-sm ${following.includes(mentor.user.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-3 py-1 rounded-md transition-colors`}
+            >
+              {following.includes(mentor.user.id) ? 'Following' : 'Connect'}
             </button>
           </div>
         ))}

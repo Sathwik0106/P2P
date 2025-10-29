@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Clock, Award } from 'lucide-react';
 import { Exam } from '../../types';
+import { getRegisteredExamIds, toggleRegisterExam } from '../../services/exams';
 
 interface UpcomingExamsProps {
   exams: Exam[];
 }
 
 const UpcomingExams: React.FC<UpcomingExamsProps> = ({ exams }) => {
+  const [registered, setRegistered] = useState<string[]>(getRegisteredExamIds());
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
       <div className="flex justify-between items-center mb-4">
@@ -40,8 +42,11 @@ const UpcomingExams: React.FC<UpcomingExamsProps> = ({ exams }) => {
               </div>
             </div>
             <div className="mt-3 flex justify-end">
-              <button className="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-md transition-colors">
-                Register
+              <button
+                onClick={() => setRegistered(toggleRegisterExam(exam.id))}
+                className={`text-sm ${registered.includes(exam.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-3 py-1 rounded-md transition-colors`}
+              >
+                {registered.includes(exam.id) ? 'Registered' : 'Register'}
               </button>
             </div>
           </div>

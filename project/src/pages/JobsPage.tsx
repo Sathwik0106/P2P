@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Sidebar from '../components/layout/Sidebar';
-import { jobs } from '../data/mockData';
 import { Briefcase, MapPin, Clock, Users } from 'lucide-react';
+import { getJobs, toggleSaveJob, getSavedJobIds, applyToJob, getAppliedJobIds } from '../services/jobs';
+import type { Job } from '../types';
 
 const JobsPage: React.FC = () => {
   const formatDate = (dateString: string) => {
@@ -12,6 +13,28 @@ const JobsPage: React.FC = () => {
       year: 'numeric',
     }).format(date);
   };
+
+  const [allJobs, setAllJobs] = useState<Job[]>([]);
+  const [query, setQuery] = useState('');
+  const [type, setType] = useState('');
+  const [saved, setSaved] = useState<string[]>([]);
+  const [applied, setApplied] = useState<string[]>([]);
+
+  useEffect(() => {
+    setAllJobs(getJobs());
+    setSaved(getSavedJobIds());
+    setApplied(getAppliedJobIds());
+  }, []);
+
+  const visibleJobs = useMemo(() => {
+    return allJobs.filter((j) => {
+      const matchesQuery = query
+        ? [j.title, j.company.name, j.location, j.description].some((t) => t.toLowerCase().includes(query.toLowerCase()))
+        : true;
+      const matchesType = type ? j.type === (type as Job['type']) : true;
+      return matchesQuery && matchesType;
+    });
+  }, [allJobs, query, type]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -38,8 +61,14 @@ const JobsPage: React.FC = () => {
                   type="text" 
                   placeholder="Search jobs..." 
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                 />
-                <select className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                <select
+                  className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                >
                   <option value="">All Job Types</option>
                   <option value="internship">Internship</option>
                   <option value="full-time">Full-time</option>
@@ -53,14 +82,18 @@ const JobsPage: React.FC = () => {
             </div>
             
             <div className="space-y-6">
-              {jobs.concat(jobs).map((job, index) => (
+              {visibleJobs.map((job, index) => (
                 <div key={`${job.id}-${index}`} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-start space-x-4">
                     <img src={job.company.avatar} alt={job.company.name} className="h-12 w-12 rounded-md" />
                     <div className="flex-1">
                       <div className="flex justify-between">
                         <h3 className="font-semibold text-gray-800 text-lg">{job.title}</h3>
-                        <button className="text-gray-400 hover:text-gray-600">
+                        <button
+                          onClick={() => setSaved(toggleSaveJob(job.id))}
+                          className={`text-gray-400 hover:text-gray-600 ${saved.includes(job.id) ? 'text-indigo-600' : ''}`}
+                          title={saved.includes(job.id) ? 'Unsave job' : 'Save job'}
+                        >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                           </svg>
@@ -99,8 +132,11 @@ const JobsPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="mt-4 flex justify-end">
-                    <button className="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors">
-                      Apply Now
+                    <button
+                      onClick={() => setApplied(applyToJob(job.id))}
+                      className={`text-sm ${applied.includes(job.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-4 py-2 rounded-md transition-colors`}
+                    >
+                      {applied.includes(job.id) ? 'Applied' : 'Apply Now'}
                     </button>
                   </div>
                 </div>

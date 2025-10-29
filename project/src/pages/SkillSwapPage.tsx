@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Sidebar from '../components/layout/Sidebar';
-import { skillSwapRequests } from '../data/mockData';
+import { getSkillSwaps, createSkillSwap } from '../services/skills';
+import { currentUser } from '../data/mockData';
+import type { SkillSwapRequest } from '../types';
 import { ArrowLeftRight, Calendar, Clock } from 'lucide-react';
 
 const SkillSwapPage: React.FC = () => {
+  const [requests, setRequests] = useState<SkillSwapRequest[]>([]);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    setRequests(getSkillSwaps());
+  }, []);
+
+  const visible = useMemo(() => {
+    return requests.filter((r) =>
+      query
+        ? [r.skillToLearn, r.skillToTeach, r.description, r.user.name]
+            .filter(Boolean)
+            .some((t) => t.toLowerCase().includes(query.toLowerCase()))
+        : true
+    );
+  }, [requests, query]);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -25,7 +44,21 @@ const SkillSwapPage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold text-gray-800">Skill Swap   Board</h1>
-              <button className="btn-primary">Create New Request</button>
+              <button
+                onClick={() => {
+                  const req = createSkillSwap(
+                    currentUser,
+                    'React',
+                    'Python',
+                    'Happy to trade React guidance for Python lessons.',
+                    'Evenings and weekends'
+                  );
+                  setRequests((prev) => [req, ...prev]);
+                }}
+                className="btn-primary"
+              >
+                Create New Request
+              </button>
             </div>
             
             <div className="mb-6">
@@ -34,6 +67,8 @@ const SkillSwapPage: React.FC = () => {
                   type="text" 
                   placeholder="Search skills..." 
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                 />
                 <select className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                   <option value="">All Categories</option>
@@ -49,7 +84,7 @@ const SkillSwapPage: React.FC = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {skillSwapRequests.concat(skillSwapRequests).map((request, index) => (
+              {visible.map((request, index) => (
                 <div key={`${request.id}-${index}`} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-start space-x-3">
                     <img src={request.user.avatar} alt={request.user.name} className="h-12 w-12 rounded-full" />
